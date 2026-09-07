@@ -77,7 +77,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-_segmenter: FineTunedSegmenter | None = None
+_segmenter = None  # set lazily by get_segmenter() when detection is available
 _impact_model = None  # loaded lazily: {"model": sklearn Pipeline, "test_mae": float, "test_r2": float, "n_train": int}
 
 
