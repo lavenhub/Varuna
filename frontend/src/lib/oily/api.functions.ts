@@ -29,6 +29,10 @@ import type { Incident } from "./types";
  * VARUNA_API_URL defaults to the service's local dev address.
  */
 const VARUNA_API_URL = process.env["VARUNA_API_URL"] ?? "http://127.0.0.1:8000";
+// Detection can be routed to a separate backend (e.g. a tunnel to a local
+// machine running the full PyTorch model) while everything else uses the
+// always-on VARUNA_API_URL. Falls back to VARUNA_API_URL when unset.
+const DETECT_API_URL = process.env["DETECT_API_URL"] ?? VARUNA_API_URL;
 
 export const classifyImage = createServerFn({ method: "POST" })
   .inputValidator((data: { fileName: string; fileDataBase64: string }) => data)
@@ -39,10 +43,10 @@ export const classifyImage = createServerFn({ method: "POST" })
 
     let response: Response;
     try {
-      response = await fetch(`${VARUNA_API_URL}/detect`, { method: "POST", body: form });
+      response = await fetch(`${DETECT_API_URL}/detect`, { method: "POST", body: form });
     } catch (cause) {
       throw new Error(
-        `Could not reach the Varuna detection service at ${VARUNA_API_URL}. Start it with ` +
+        `Could not reach the Varuna detection service at ${DETECT_API_URL}. Start it with ` +
           `".venv311\\Scripts\\python.exe scripts\\run_api.py" from model_for_spill_detection/all model.`,
         { cause },
       );
