@@ -1,0 +1,38 @@
+# === Dependencies / build output ===
+**/node_modules/
+frontend/.output/
+frontend/.nitro/
+frontend/.wrangler/
+frontend/.vite/
+frontend/dist/
+**/.turbo/
+
+# === Python ===
+**/.venv/
+**/.venv311/
+**/__pycache__/
+*.py[cod]
+*.egg-info/
+
+# === Model weights & large data (NOT committed — see README) ===
+backend/models/
+backend/data/
+*.pt
+*.pth
+*.joblib
+*.onnx
+
+# === Databases ===
+*.db
+*.db-wal
+*.db-shm
+
+# === Secrets / env ===
+.env
+.env.*
+!.env.example
+
+# === OS / editor ===
+.DS_Store
+Thumbs.db
+*.log

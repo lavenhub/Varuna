@@ -1,0 +1,181 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * VARUNA design system — professional GIS / operations console.
+ * Light neutral surfaces, dark navy command sidebar, blue/cyan data accents,
+ * red / orange / green risk semantics. All colors in oklch.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-navy: var(--navy);
+  --color-navy-foreground: var(--navy-foreground);
+  --color-navy-muted: var(--navy-muted);
+  --color-navy-hover: var(--navy-hover);
+  --color-cyan: var(--cyan);
+  --color-critical: var(--critical);
+  --color-critical-soft: var(--critical-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-caution: var(--caution);
+  --color-caution-soft: var(--caution-soft);
+  --color-safe: var(--safe);
+  --color-safe-soft: var(--safe-soft);
+  --color-info-soft: var(--info-soft);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --shadow-panel: 0 1px 2px oklch(0.2 0.04 260 / 0.06), 0 1px 3px oklch(0.2 0.04 260 / 0.04);
+  --shadow-raised: 0 2px 6px oklch(0.2 0.04 260 / 0.08), 0 8px 24px oklch(0.2 0.04 260 / 0.06);
+}
+
+:root {
+  --radius: 0.375rem;
+  --background: oklch(0.972 0.003 247);
+  --foreground: oklch(0.245 0.035 262);
+  --surface: oklch(0.988 0.002 247);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.245 0.035 262);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.245 0.035 262);
+  --primary: oklch(0.495 0.152 254);
+  --primary-foreground: oklch(0.99 0.002 247);
+  --secondary: oklch(0.955 0.006 247);
+  --secondary-foreground: oklch(0.3 0.035 262);
+  --muted: oklch(0.958 0.005 247);
+  --muted-foreground: oklch(0.53 0.026 258);
+  --accent: oklch(0.94 0.02 240);
+  --accent-foreground: oklch(0.3 0.05 258);
+  --destructive: oklch(0.545 0.208 27);
+  --destructive-foreground: oklch(0.99 0.002 247);
+  --border: oklch(0.905 0.008 250);
+  --border-strong: oklch(0.85 0.012 250);
+  --input: oklch(0.9 0.008 250);
+  --ring: oklch(0.6 0.11 250);
+
+  --navy: oklch(0.245 0.042 262);
+  --navy-foreground: oklch(0.955 0.008 247);
+  --navy-muted: oklch(0.68 0.028 255);
+  --navy-hover: oklch(0.305 0.05 262);
+  --cyan: oklch(0.68 0.13 220);
+
+  --critical: oklch(0.535 0.212 26);
+  --critical-soft: oklch(0.955 0.03 25);
+  --warning: oklch(0.645 0.168 47);
+  --warning-soft: oklch(0.965 0.04 75);
+  --caution: oklch(0.76 0.14 85);
+  --caution-soft: oklch(0.972 0.04 95);
+  --safe: oklch(0.535 0.13 155);
+  --safe-soft: oklch(0.955 0.035 160);
+  --info-soft: oklch(0.958 0.022 245);
+
+  --chart-1: oklch(0.495 0.152 254);
+  --chart-2: oklch(0.68 0.13 220);
+  --chart-3: oklch(0.645 0.168 47);
+  --chart-4: oklch(0.535 0.212 26);
+  --chart-5: oklch(0.535 0.13 155);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.012em;
+  }
+}
+
+@utility label-caps {
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-muted-foreground);
+}
+
+@utility panel {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-panel);
+}
+
+@utility num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Leaflet integration: keep basemap restrained and typography consistent */
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: oklch(0.93 0.02 235);
+}
+.leaflet-control-attribution {
+  font-size: 10px;
+  background: oklch(1 0 0 / 0.75) !important;
+}
+.leaflet-bar a {
+  color: var(--color-foreground) !important;
+}
+.leaflet-popup-content-wrapper {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-raised);
+  border: 1px solid var(--color-border);
+}
+.leaflet-popup-content {
+  margin: 0;
+  width: 220px !important;
+}
+
+/* "night" map theme (Drift Analysis) — dark operational-tracking look, applied
+   over standard OSM tiles via CSS filter so it never depends on a third-party
+   dark-tile service (which may require its own API key). */
+.oily-tiles-night {
+  filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(1.05) saturate(0.7);
+}

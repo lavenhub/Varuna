@@ -1,0 +1,21 @@
+name: varuna
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy
+  - scipy
+  - pandas
+  - matplotlib
+  - gdal
+  - rasterio
+  - geopandas
+  - movingpandas
+  - opendrift
+  - shapely
+  - pyproj
+  - scikit-image
+  - opencv
+  - pip
+  - pip:
+      - -r requirements.txt

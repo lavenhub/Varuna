@@ -1,0 +1,23 @@
+# PyTorch is installed separately with the CUDA-matched index, see README Phase 0:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
+segmentation-models-pytorch
+albumentations
+ultralytics
+timm
+
+streamlit
+folium
+streamlit-folium
+plotly
+
+fastapi
+uvicorn
+websockets
+
+ollama
+pandas
+numpy
+xarray
+netCDF4
+copernicusmarine
+cdsapi
