@@ -46,7 +46,24 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from varuna.detect.segment import FineTunedSegmenter, OIL, largest_polygon_geometry, largest_region_bbox
+# Detection depends on PyTorch + segmentation-models. On lightweight web
+# deployments (e.g. Render free tier) those aren't installed to fit the memory
+# budget, so the import is optional: the app still boots and serves every other
+# endpoint; only /detect returns 503 when detection isn't available.
+try:
+    from varuna.detect.segment import (
+        FineTunedSegmenter,
+        OIL,
+        largest_polygon_geometry,
+        largest_region_bbox,
+    )
+    _DETECTION_AVAILABLE = True
+except Exception as _detect_import_error:  # noqa: BLE001 — torch/smp absent on lite deploys
+    FineTunedSegmenter = None  # type: ignore[assignment]
+    OIL = 1
+    largest_polygon_geometry = None  # type: ignore[assignment]
+    largest_region_bbox = None  # type: ignore[assignment]
+    _DETECTION_AVAILABLE = False
 
 CHECKPOINT_PATH = os.environ.get("VARUNA_CHECKPOINT", "models/segmenter_best.pt")
 IMPACT_MODEL_PATH = os.environ.get("VARUNA_IMPACT_MODEL", "models/impact_model.joblib")
@@ -64,8 +81,15 @@ _segmenter: FineTunedSegmenter | None = None
 _impact_model = None  # loaded lazily: {"model": sklearn Pipeline, "test_mae": float, "test_r2": float, "n_train": int}
 
 
-def get_segmenter() -> FineTunedSegmenter:
+def get_segmenter() -> "FineTunedSegmenter":
     global _segmenter
+    if not _DETECTION_AVAILABLE:
+        raise HTTPException(
+            503,
+            "SAR oil detection is not available on this deployment (PyTorch not "
+            "installed to fit the free-tier memory budget). Run the full/local "
+            "backend for image detection; all other endpoints work here.",
+        )
     if _segmenter is None:
         if not Path(CHECKPOINT_PATH).exists():
             raise HTTPException(500, f"checkpoint not found at {CHECKPOINT_PATH}")

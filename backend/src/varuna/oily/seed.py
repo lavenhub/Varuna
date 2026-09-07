@@ -93,14 +93,19 @@ _RESOURCES = [
 
 
 def ensure_seeded() -> None:
-    """Seed the response-resource inventory only. Incidents deliberately start at
-    ZERO — the operational incident log begins empty and grows as spills are
-    detected and confirmed through the app (product decision, 2026-09-07). The
-    demo incident set (_DEMO_INCIDENTS) is kept here for reference but no longer
-    loaded; call seed_demo_incidents() explicitly if you ever want them back."""
+    """Seed the response-resource inventory. Incidents start at ZERO by default —
+    the operational log begins empty and grows as spills are detected/confirmed.
+
+    Exception: when ``OILY_SEED_DEMO`` is set (e.g. the hosted lite demo where
+    image detection is disabled and users can't create incidents via upload), the
+    5 demo incidents are also loaded so Drift/Impact/Response/What-If have data."""
+    import os
+
     if not repo.list_resources():
         for res in _RESOURCES:
             repo.upsert_resource(**res)
+    if os.environ.get("OILY_SEED_DEMO"):
+        seed_demo_incidents()
 
 
 def seed_demo_incidents() -> None:

@@ -1,0 +1,23 @@
+# Render Blueprint — hosts the Varuna lite backend (no PyTorch/detection) on the
+# free tier. Everything except /detect works. See backend/requirements-web.txt.
+services:
+  - type: web
+    name: varuna-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements-web.txt
+    startCommand: uvicorn varuna.app.inference_api:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: PYTHONPATH
+        value: src
+      - key: OILY_DB_PATH
+        value: /tmp/oily.db
+      - key: OILY_HISTORY_CSV
+        value: data/oil_spill_master.csv
+      - key: VARUNA_IMPACT_MODEL
+        value: models/impact_model.joblib
+      - key: OILY_SEED_DEMO
+        value: "1"

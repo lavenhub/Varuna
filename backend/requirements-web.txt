@@ -1,0 +1,12 @@
+# Lightweight dependency set for the hosted web backend (Render free tier).
+# Excludes PyTorch / segmentation-models (image detection) to fit 512 MB RAM.
+# Powers: incidents, environment, simulation, impact, response, history, chat.
+fastapi
+uvicorn
+python-multipart
+pydantic
+numpy
+pandas
+scikit-learn
+joblib
+global-land-mask

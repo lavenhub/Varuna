@@ -15,11 +15,14 @@ frontend/dist/
 *.egg-info/
 
 # === Model weights & large data (NOT committed — see README) ===
-backend/models/
-backend/data/
+# Keep the small NOAA CSV (2 MB) + impact model (256 KB) so the hosted backend
+# works; still exclude the 90 MB SAR segmenter weights and the 26 GB datasets.
+backend/models/*
+!backend/models/impact_model.joblib
+backend/data/*
+!backend/data/oil_spill_master.csv
 *.pt
 *.pth
-*.joblib
 *.onnx
 
 # === Databases ===
