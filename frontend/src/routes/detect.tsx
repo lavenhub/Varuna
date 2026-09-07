@@ -58,6 +58,7 @@ function DetectPage() {
   const [logStep, setLogStep] = useState(0);
   const [newId, setNewId] = useState<string | null>(null);
   const [logError, setLogError] = useState<string | null>(null);
+  const [detectError, setDetectError] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const [form, setForm] = useState({
     name: "Arabian Sea Crude Oil Spill",
@@ -74,25 +75,34 @@ function DetectPage() {
   });
 
   async function runClassification(meta: { name: string; size: number }, dataUrl: string) {
+    setDetectError(null);
     setPreview(dataUrl);
     setFileLabel(meta.name);
     setStage("analyzing");
-    const result = await classifySpillImage(meta, dataUrl);
-    setPrediction(result);
-    // Browsers can't render raw SAR uploads (e.g. multi-band GeoTIFF) inline —
-    // swap in the model's rendered scene, which always displays. Prefer the
-    // annotated version (real detected region baked in) over the plain preview.
-    if (result.annotatedJpegBase64) {
-      setPreview(`data:image/jpeg;base64,${result.annotatedJpegBase64}`);
-    } else if (result.sourcePreviewPngBase64) {
-      setPreview(`data:image/png;base64,${result.sourcePreviewPngBase64}`);
+    try {
+      const result = await classifySpillImage(meta, dataUrl);
+      setPrediction(result);
+      // Browsers can't render raw SAR uploads (e.g. multi-band GeoTIFF) inline —
+      // swap in the model's rendered scene, which always displays. Prefer the
+      // annotated version (real detected region baked in) over the plain preview.
+      if (result.annotatedJpegBase64) {
+        setPreview(`data:image/jpeg;base64,${result.annotatedJpegBase64}`);
+      } else if (result.sourcePreviewPngBase64) {
+        setPreview(`data:image/png;base64,${result.sourcePreviewPngBase64}`);
+      }
+      setForm((f) => ({
+        ...f,
+        confidence: (result.confidence * 100).toFixed(1),
+        area: String(result.estimatedAreaKm2),
+      }));
+      setStage("result");
+    } catch (err) {
+      // e.g. the hosted lite backend returns 503 (no PyTorch). Never leave the UI
+      // stuck on "analyzing" — surface a clear message and reset.
+      setDetectError(err instanceof Error ? err.message : String(err));
+      setPreview(null);
+      setStage("upload");
     }
-    setForm((f) => ({
-      ...f,
-      confidence: (result.confidence * 100).toFixed(1),
-      area: String(result.estimatedAreaKm2),
-    }));
-    setStage("result");
   }
 
   function handleFile(file: File) {
@@ -169,6 +179,19 @@ function DetectPage() {
         subtitle="Upload satellite or aerial imagery to identify potential oil-spill regions."
         badges={<QualityBadge quality="MODELLED" />}
       />
+
+      {detectError ? (
+        <div className="rounded-md border border-warning/40 bg-warning-soft p-3.5">
+          <p className="text-sm font-semibold text-warning">SAR detection unavailable on this host</p>
+          <p className="mt-1 text-[13px] text-muted-foreground">
+            The hosted demo runs a lightweight backend without the deep-learning SAR model (the free
+            tier can't hold PyTorch in memory). Image detection works on the full/local backend; every
+            other feature — drift, impact, response, history, what-if — works here. You can still
+            explore the seeded incidents from the Dashboard.
+          </p>
+          <p className="num mt-2 text-[11px] text-muted-foreground/80">{detectError}</p>
+        </div>
+      ) : null}
 
       {stage === "upload" ? (
         <div className="grid gap-4 lg:grid-cols-[1fr_340px]">
