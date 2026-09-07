@@ -1,5 +1,7 @@
 # Varuna — Oil Spill Intelligence & Emergency Response Platform
 
+![Varuna Command Center](docs/dashboard.png)
+
 Detects oil spills from satellite SAR imagery (deep learning), forecasts 72-hour
 drift with an uncertainty envelope, scores environmental impact with a
 NOAA-trained model, and generates ranked, resource-aware response plans. Built on
